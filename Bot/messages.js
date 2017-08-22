@@ -21,12 +21,14 @@ var ExamType,RegdNum;
 *
 *Application Credentials
 */
+var sample=[];
 var twilioSid = process.env.TWILIO_SID;
 var twilioToken = process.env.TWILIO_TOKEN;
 var me = process.env.CLOUDANT_USER;
 var password = process.env.CLOUDANT_PASS;
 var cloudant = Cloudant({account:me, password:password});
 var transport=cloudant.db.use('transportation');
+var library=cloudant.db.use('library');
 app.use(bodyParser.urlencoded({ extended: false })); 
 app.use(bodyParser.json());
 var port = (process.env.VCAP_APP_PORT || 3001);
@@ -48,11 +50,11 @@ var json1={};
 		var client = twilio(twilioSid,twilioToken);
 			sendToWatson(contextw, Msg, function(response) {
 				
-				console.log("haii");
-				//console.log("g"+JSON.stringify(response));
+				
+				
+				
 				if(response.output.text[0].action ==="forward"){
-					console.log("harshitha");
-			console.log("Twilio got :" + response.output.text[0]);
+					
 	     client.messages.create({
 		to:Num,
 		from:'+13237451396',
@@ -75,9 +77,9 @@ var json1={};
 		});
 				}
 				
-else{
-	console.log(response);
-	//insert context into database.
+else if(response.output.text[0] ==="transport"){
+	//Transport module
+
 	
 	var document = cloudant.db.use('context')
                       data.context=response.context;
@@ -97,9 +99,11 @@ console.log("document inserted");
 	
 	var json1={};
 	if(response.entities[0].value=='yes'){
-		console.log(response.entities[0].value);
+		
 	 json1.sample1=response.context.from;
+	
 	console.log(json1);
+	console.log(json1.sample1);
 	
 	 var query1=
 	{
@@ -155,7 +159,10 @@ transport.find(query1,function(err,x){
 
 
 }else if(response.entities[0].value=='fare'){
-	console.log("harshitga");
+	
+	//console.log("harshitga");
+	console.log(response.entities);
+	console.log(response);
 	console.log(response.entities[1].value);
 	 json1.sample3=response.entities[1].value;
 	 
@@ -268,10 +275,237 @@ transport.find(query1,function(err,x){
 			}
 		}); });
 	
-}		
+}		 
+	
+	
+	
+	
+	
+	
+	//Transport module ends
+	
+	
+		
+	
+		
+		
+		
+
+}
+else{
+		
+	var document = cloudant.db.use('context1')
+                      data.context=response.context;
+                      var rev=data.rev_id;
+                      id=data._id;
+console.log("document inserted");
+
+				document.insert(data, req.body.From, rev, id, function(err, body, header) {
+           if (err) {
+                  return console.log('[alice.insert] ', err.message);
+            }
+			
+             });
+			 
+			 if(response.entities[0].entity=="Department"){
+				 var json1={};
+				 console.log(response)
+				 console.log(response.entities[0].value);
+				 
+				 
+				 
+	 json1.sample1=response.entities[0].value;
+	 console.log("anusha")
+	 console.log(response.context.AboutLibrary)
+	 
+	 
+	 
+	 var query1=
+	{
+  "selector": {
+    "Department": {
+      "$eq":json1.sample1
+    },
+	"bookname":{
+		"$eq":response.context.AboutLibrary
+	}
+  },
+  "fields": [
+    "_id",
+    "_rev","Department","bookname","information"
+  ]
+}
+var json={};
+
+
+library.find(query1,function(err,x){
+	if(err)
+		console.log(err);
+	else{
+		console.log(x);
+		json.sample=x.docs[0].information;
+		console.log(json);
+	}
+	client.messages.create({
+		to:Num,
+		from:'+13237451396',
+		body: json.sample
+			}, function(err,data) {
+				if (err){
+				response = {
+				"result":"err"
+				}
+		res.json(response);
+	}
+	else{
+		console.log("response from twilio message service" + data);
+		console.log("\n SMS sent to :"+Num+" Body is : "+ response.output.text[0] );
+			response = {
+				"result":"msg"
+				}
+				res.json(response); 
+			}
+		}); });
+
+
+
+
+}
+else if(response.entities[0].entity=="Department" && response.entities[1].entity=="AboutLibrary"){
+	var json1={};
+	 json1.sample3=response.entities[0].value;
+	 json1.sample4=response.entities[1].value;
+	 console.log(json1);
+	 
+	 var query1=
+	{
+  "selector": {
+    "Department": {
+      "$eq":json1.sample3
+    },
+	"bookname":{
+		"$eq":json1.sample4
+	}
+  },
+  "fields": [
+    "_id",
+    "_rev","Department","bookname","information"
+  ]
+}
+var json={};
+
+
+library.find(query1,function(err,x){
+	if(err)
+		console.log(err);
+	else{
+		console.log(x);
+		json.sample=x.docs[0].information;
+		console.log(json);
+	}
+	
 
 		
 		
+		
+	
+	  client.messages.create({
+		to:Num,
+		from:'+13237451396',
+		body: json.sample
+			}, function(err,data) {
+				if (err){
+				response = {
+				"result":"err"
+				}
+		res.json(response);
+	}
+	else{
+		console.log("response from twilio message service" + data);
+		console.log("\n SMS sent to :"+Num+" Body is : "+ response.output.text[0] );
+			response = {
+				"result":"msg"
+				}
+				res.json(response); //sends JSON response to HTML
+			}
+		}); });
+
+}
+else if(response.entities[0].entity=="AboutLibrary"){
+	var json={};
+	json.sample=response.output.text[0];
+	//sample.push(response.entities[0].value);
+	//console.log(json);
+
+		
+		
+		
+	
+	  client.messages.create({
+		to:Num,
+		from:'+13237451396',
+		body: json.sample
+			}, function(err,data) {
+				if (err){
+				response = {
+				"result":"err"
+				}
+		res.json(response);
+	}
+	else{
+		console.log("response from twilio message service" + data);
+		console.log("\n SMS sent to :"+Num+" Body is : "+ response.output.text[0] );
+			response = {
+				"result":"msg"
+				}
+				res.json(response); 
+			}
+		}); 
+		
+		
+		
+
+}
+ else {
+	 
+	 console.log(response.output.text[0]);
+	var json={};
+	json.sample=response.output.text[0];
+	//sample.push(response.entities[0].value);
+	//console.log(json);
+
+		
+		
+		
+	
+	  client.messages.create({
+		to:Num,
+		from:'+13237451396',
+		body: json.sample
+			}, function(err,data) {
+				if (err){
+				response = {
+				"result":"err"
+				}
+		res.json(response);
+	}
+	else{
+		console.log("response from twilio message service" + data);
+		console.log("\n SMS sent to :"+Num+" Body is : "+ response.output.text[0] );
+			response = {
+				"result":"msg"
+				}
+				res.json(response); 
+			}
+		}); 
+} 
+		
+		
+		
+		
+	
+	
+
 }				
 	});
   })
@@ -374,7 +608,7 @@ if(flag == 0){
  * Twilio will send HTTP post request to '/sms' containing the user information
  */
  
-app.post('/sms',function(req,res){
+/* app.post('/sms',function(req,res){
 	console.log("/sms");
 	console.log(res.req.body);
 	var Num = res.req.body.From;
@@ -412,7 +646,7 @@ app.post('/sms',function(req,res){
 		
 		
 	})
-})
+}) */
 /**
  * Starting Server in localhost
  */
