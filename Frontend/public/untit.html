@@ -13,7 +13,7 @@
   console.log($scope.data);
 	 var res = {
             method : 'POST',
-            url : 'https://mrclbot.mybluemix.net/data',
+            url : 'http://localhost:3000/data',
             data : $scope.data,
              headers: {
                         'Content-Type': 'Application/json'
@@ -103,18 +103,18 @@ top:0;
    <input id="name" class="form-control" ng-model="data.mname" placeholder="Mother Name" required type="text"></div><br/>
     <div class="input-group">
    <div class="input-group-addon" style="background-color: transparent;"><label>Gender:</label></div>
-<select class="form-control" class="form-control" style="width:98%;" ng-model="data.gender" required>
+<select class="form-control" class="form-control" style="width:98%;margin-left:0px" ng-model="data.gender" required>
             <option value="select">Iam ..</option>
             <option value="m">Male</option>
             <option value="f">Female</option>
     	</select>
-    <div class="input-group-addon" style="background-color:transparent;left:20%;"><label>DOB:</label></div>
-    <input id="name" class="form-control" style="width:100%;" ng-model="data.dob" placeholder="DD/MM/YYYY" required type="Date"></div> <br>
+    <div class="input-group-addon" style="background-color:transparent; "><label>DOB:</label></div>
+    <input id="name" class="form-control" style="width:100%" ng-model="data.dob" placeholder="DD/MM/YYYY" required type="Date"></div> <br>
     <div class="input-group">
    <div class="input-group-addon" style="background-color: transparent;"><label>SSC Marks:</label></div>
     <input ng-model="data.name" class="form-control" style="width:90%;" name=" SSC marks" placeholder="Marks or GPA" required type="number">  
-     <div class="input-group-addon" style="background-color: transparent"><label>Pass Year:</label></div>
-     <select class="form-control" style="width:100%;margin-right:100px" ng-model="data.sscpassyear" required>
+     <div class="input-group-addon" style="width:10%;background-color: transparent;margin-right:10px"><label>Pass Year:</label></div>
+     <select class="form-control" style="width:100%;margin-right:110px" ng-model="data.sscpassyear" required>
             <option value="select">Year</option>
             <option value="cse">2005</option>
             <option value="ece">2006</option>
@@ -161,4 +161,5 @@ top:0;
 		</div>
 		
 </div></center>
+
 </body> </html>

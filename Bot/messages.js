@@ -77,8 +77,7 @@ var json1={};
 		});
 				}
 				
-else if(response.output.text[0] ==="transport"){
-	//Transport module
+else if(response.output.text[0] ==="transport"){   //Transport module
 
 	
 	var document = cloudant.db.use('context')
@@ -92,32 +91,24 @@ console.log("document inserted");
                   return console.log('[alice.insert] ', err.message);
             }
              });
-	
-	
-	
-	
-	
 	var json1={};
 	if(response.entities[0].value=='yes'){
-		
 	 json1.sample1=response.context.from;
-	
-	console.log(json1);
-	console.log(json1.sample1);
-	
+     console.log(json1);
+	 console.log(json1.sample1);
 	 var query1=
-	{
-  "selector": {
-    "name": {
-      "$eq":json1.sample1
-    }
-  },
-  "fields": [
-    "_id",
-    "_rev","fees","name"
-  ]
-}
-var json={};
+	 {
+       "selector": {
+       "name": {
+       "$eq":json1.sample1
+               }
+                   },
+	  "fields": [
+      "_id",
+      "_rev","fees","name"
+                ]
+      }
+     var json={};
 
 
 transport.find(query1,function(err,x){
@@ -128,21 +119,15 @@ transport.find(query1,function(err,x){
 		json.sample=x.docs[0].fees;
 		console.log(json);
 	}
-	
-
-		
-		
-		
-	
-	  client.messages.create({
-		to:Num,
-		from:'+13237451396',
-		body: json.sample
-			}, function(err,data) {
-				if (err){
-				response = {
-				"result":"err"
-				}
+	    client.messages.create({
+		  to:Num,
+		  from:'+13237451396',
+		  body: json.sample
+			 }, function(err,data) {
+				 if (err){
+				 response = {
+				 "result":"err"
+				 }
 		res.json(response);
 	}
 	else{
@@ -170,8 +155,8 @@ transport.find(query1,function(err,x){
 	
 	  var query1=
 	{
-  "selector": {
-    "name": {
+      "selector": {
+      "name": {
       "$eq":json1.sample3
     }
   },
@@ -181,23 +166,14 @@ transport.find(query1,function(err,x){
   ]
 }
 var json={};
-
-
-transport.find(query1,function(err,x){
-	if(err)
-		console.log(err);
-	else{
-		
-		json.sample=x.docs[0].fees;
-		console.log(json);
+   transport.find(query1,function(err,x){
+	  if(err)
+		  console.log(err);
+	  else{
+		 json.sample=x.docs[0].fees;
+		 console.log(json);
 	}
-	
-
-		
-		
-		
-	
-	  client.messages.create({
+	client.messages.create({
 		to:Num,
 		from:'+13237451396',
 		body: json.sample
@@ -217,29 +193,24 @@ transport.find(query1,function(err,x){
 				res.json(response); //sends JSON response to HTML
 			}
 		}); });
-	 
+	 }
+  else{
 	
-}
-else{
-	
-	 json1.sample2=response.entities[0].value;
-	console.log(json1);
-	
-	 var query1=
-	{
-  "selector": {
-    "name": {
-      "$eq":json1.sample2
-    }
-  },
-  "fields": [
-    "_id",
-    "_rev","Availability","name"
-  ]
-}
+	   json1.sample2=response.entities[0].value;
+	   console.log(json1);
+       var query1=
+	    {
+          "selector": {
+          "name": {
+          "$eq":json1.sample2
+                  }
+                      },
+          "fields": [
+          "_id",
+          "_rev","Availability","name"
+                    ]
+        }
 var json={};
-
-
 transport.find(query1,function(err,x){
 	if(err)
 		console.log(err);
@@ -248,13 +219,7 @@ transport.find(query1,function(err,x){
 		json.sample=x.docs[0].Availability;
 		console.log(json);
 	}
-	
-
-		
-		
-		
-	
-	  client.messages.create({
+	 client.messages.create({
 		to:Num,
 		from:'+13237451396',
 		body: json.sample
@@ -275,69 +240,42 @@ transport.find(query1,function(err,x){
 			}
 		}); });
 	
-}		 
-	
-	
-	
-	
-	
-	
-	//Transport module ends
-	
-	
-		
-	
-		
-		
-		
-
-}
-else{
-		
-	var document = cloudant.db.use('context1')
-                      data.context=response.context;
-                      var rev=data.rev_id;
-                      id=data._id;
-console.log("document inserted");
-
-				document.insert(data, req.body.From, rev, id, function(err, body, header) {
-           if (err) {
-                  return console.log('[alice.insert] ', err.message);
+      }		 //Transport module ends
+	}
+   else{
+   var document = cloudant.db.use('context1')
+                  data.context=response.context;
+                  var rev=data.rev_id;
+                  id=data._id;
+   console.log("document inserted");
+   document.insert(data, req.body.From, rev, id, function(err, body, header) {
+   if (err) {
+          return console.log('[alice.insert] ', err.message);
             }
-			
-             });
-			 
-			 if(response.entities[0].entity=="Department"){
+			});
+			if(response.entities[0].entity=="Department"){
 				 var json1={};
 				 console.log(response)
 				 console.log(response.entities[0].value);
-				 
-				 
-				 
-	 json1.sample1=response.entities[0].value;
-	 console.log("anusha")
-	 console.log(response.context.AboutLibrary)
-	 
-	 
-	 
-	 var query1=
-	{
-  "selector": {
-    "Department": {
-      "$eq":json1.sample1
-    },
-	"bookname":{
-		"$eq":response.context.AboutLibrary
-	}
-  },
-  "fields": [
-    "_id",
-    "_rev","Department","bookname","information"
-  ]
-}
+			     json1.sample1=response.entities[0].value;
+	             console.log("anusha")
+	             console.log(response.context.AboutLibrary)
+    var query1=
+	 {
+         "selector": {
+                        "Department": {
+                        "$eq":json1.sample1
+                                      },
+	      "bookname": {
+		                "$eq":response.context.AboutLibrary
+	                  }
+                     },
+       "fields": [
+                   "_id",
+                   "_rev","Department","bookname","information"
+                 ]
+     }
 var json={};
-
-
 library.find(query1,function(err,x){
 	if(err)
 		console.log(err);
@@ -366,10 +304,6 @@ library.find(query1,function(err,x){
 				res.json(response); 
 			}
 		}); });
-
-
-
-
 }
 else if(response.entities[0].entity=="Department" && response.entities[1].entity=="AboutLibrary"){
 	var json1={};
@@ -393,9 +327,7 @@ else if(response.entities[0].entity=="Department" && response.entities[1].entity
   ]
 }
 var json={};
-
-
-library.find(query1,function(err,x){
+  library.find(query1,function(err,x){
 	if(err)
 		console.log(err);
 	else{
@@ -403,13 +335,7 @@ library.find(query1,function(err,x){
 		json.sample=x.docs[0].information;
 		console.log(json);
 	}
-	
-
-		
-		
-		
-	
-	  client.messages.create({
+	client.messages.create({
 		to:Num,
 		from:'+13237451396',
 		body: json.sample
@@ -430,18 +356,11 @@ library.find(query1,function(err,x){
 			}
 		}); });
 
-}
+     }
 else if(response.entities[0].entity=="AboutLibrary"){
 	var json={};
 	json.sample=response.output.text[0];
-	//sample.push(response.entities[0].value);
-	//console.log(json);
-
-		
-		
-		
-	
-	  client.messages.create({
+	client.messages.create({
 		to:Num,
 		from:'+13237451396',
 		body: json.sample
@@ -449,10 +368,10 @@ else if(response.entities[0].entity=="AboutLibrary"){
 				if (err){
 				response = {
 				"result":"err"
-				}
+				          }
 		res.json(response);
-	}
-	else{
+	                  }
+     else{
 		console.log("response from twilio message service" + data);
 		console.log("\n SMS sent to :"+Num+" Body is : "+ response.output.text[0] );
 			response = {
@@ -461,24 +380,12 @@ else if(response.entities[0].entity=="AboutLibrary"){
 				res.json(response); 
 			}
 		}); 
-		
-		
-		
-
-}
+	}
  else {
-	 
-	 console.log(response.output.text[0]);
+	console.log(response.output.text[0]);
 	var json={};
 	json.sample=response.output.text[0];
-	//sample.push(response.entities[0].value);
-	//console.log(json);
-
-		
-		
-		
-	
-	  client.messages.create({
+    client.messages.create({
 		to:Num,
 		from:'+13237451396',
 		body: json.sample
@@ -498,15 +405,8 @@ else if(response.entities[0].entity=="AboutLibrary"){
 				res.json(response); 
 			}
 		}); 
-} 
-		
-		
-		
-		
-	
-	
-
-}				
+      } 
+  }				
 	});
   })
   // Sending User message to Watson to process it
@@ -518,8 +418,7 @@ else if(response.entities[0].entity=="AboutLibrary"){
 				"text": inp
 					}
 		};
- 
-		var conversation = new ConversationV1({
+        var conversation = new ConversationV1({
 			username:'302deeb7-a5aa-4fe2-9841-5d80b87e56cf',
 			password: 'ihCvjboyI8qD',
 		version_date: '2017-06-01'
@@ -538,8 +437,6 @@ else if(response.entities[0].entity=="AboutLibrary"){
   *
   *Taking Student Branch to find in Database
   */
-  
-  //data1.context.TypeOfExam != null || data1.context.RegdNum != null
 	var node = data1.output.nodes_visited[0];
 		if(node == 'Exams' || node == 'RegNum' || node == 'ExamType'){
 			flag = 0;
@@ -596,7 +493,7 @@ else if(response.entities[0].entity=="AboutLibrary"){
             }
         })
     }
-}
+  }
 if(flag == 0){
     console.log("Output : "+data1.output.text[0]);
     callback(data1);

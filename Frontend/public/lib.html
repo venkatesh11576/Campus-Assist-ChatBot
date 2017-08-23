@@ -12,7 +12,7 @@
   console.log($scope.data);
 	 var res = {
             method : 'POST',
-            url : 'https://localhost:3000/insert',
+            url : 'http://localhost:3000/insertlib',
             data : $scope.data,
              headers: {
                         'Content-Type': 'Application/json'
@@ -31,7 +31,7 @@
 			
 		}
 			else{
-			$rootScope.output = "Schedules Inserted!";
+			$rootScope.output = "Inserted!";
 			$scope.classType = "alert alert-success";
 			}
 		});
@@ -75,7 +75,7 @@ top:0;
 <div id="img"></div>
 <div id="img-bg"></div>
 
-<div id="t1" style="top:3%;"><b>Exam Schedule</b></div>
+<div id="t1" style="top:3%;"><b>Miracle Library Books</b></div>
 <div class="panel panel-default" style="margin-left:30%;margin-right:25%;position:absolute;margin-top:15%;width:500px;height:100px" ng-show="output">
 <div  style="font-size:20px;height:100%" class="{{classType}}" ng-model="output"><center>{{output}}</center></div>
 </div>
@@ -97,57 +97,46 @@ top:0;
     </select></div><br>
 
 <div class = "input-group">
-<div class="input-group-addon" style="background-color: transparent;"><label>Exam Type</label></div> 
-    <select class="form-control" ng-model="data.ExamType" id="ExamType">
-    <option name = "MidTerm1">Select Type of Exam</option>
-    <option name = "MidTerm1">MidTerm1</option>
-    <option name = "LabInternals">LabInternals</option>
-    <option name = "LabExternals">LabExternals</option>
-    <option name = "MidTerm2">MidTerm2</option>
-    <option name = "Final">Final</option>
+<div class="input-group-addon" style="background-color: transparent;"><label>Academic Year</label></div> 
+    <select class="form-control" ng-model="data.Year" id="year">
+    <option name = "">Select Year</option>
+    <option name = "">First Year</option>
+	<option name = "">Second Year</option>
+	<option name = "">Third Year</option>
+	<option name = "">Fourth Year</option>
     </select></div>
-<br> 
-
+<br>
 <div class = "input-group">
-<div class="input-group-addon" style="background-color: transparent;"><label>From Date:</label></div>
-<input type="Date"  class="form-control" style="width:90%; margin-right: 10px" placeholder="Starts from" ng-model="data.sdate" id="sdate" required>
+<div class="input-group-addon" style="background-color: transparent;"><label>Semester</label></div> 
+    <select class="form-control" ng-model="data.Sem" id="Sem">
+    <option name = "">Select Semester</option>
+    <option name = "">First Semester</option>
+    <option name = "">Second Semester</option>
+</select></div>
+<br>
 
-<div class="input-group-addon" style="background-color: transparent;"><label>To Date:</label></div>
- <input type="Date" class="form-control" style="width:100%;" placeholder="ends on" ng-model="data.edate" id="edate" required></div><br>
+<div>
+<div style="background-color: transparent;"></div>
+<input type="text"  class="form-control" placeholder="Book Name" ng-model="data.bookName" id="bookName" required></div><br>
+<div>
+<div style="background-color: transparent;"></div>
+ <input type="text" class="form-control"  placeholder="Book Author" ng-model="data.bookAuthor" id="bookAuthor" required></div><br>
+<div>
+<div style="background-color: transparent;"></div>
+ <input type="text" class="form-control"  placeholder="ISBN" ng-model="data.ISBN" id="ISBN" required></div><br>
  
- <div class = "input-group">
-<div class="input-group-addon" style="background-color: transparent;"><label>Subject 1:</label></div>
-<input type="text"  class="form-control" style="width:90%; margin-right: 10px" placeholder="Subject" ng-model="data.sub1" id="sub1" required>
-
-<div class="input-group-addon" style="background-color: transparent;"><label>Date:</label></div>
- <input type="Date" class="form-control" style="width:100%;" ng-model="data.date1" id="date1" required></div><br>
-
-
- <div class = "input-group">
-<div class="input-group-addon" style="background-color: transparent;"><label>Subject 2:</label></div>
-<input type="text"  class="form-control" style="width:90%; margin-right: 10px" ng-model="data.sub2" placeholder="Subject" id="sub2" required>
-
-<div class="input-group-addon" style="background-color: transparent;"><label>Date:</label></div>
- <input type="Date" class="form-control" style="width:100%;" ng-model="data.date2" id="date2" required></div><br>
- 
-
- <div class = "input-group">
-<div class="input-group-addon" style="background-color: transparent;"><label>Subject 3:</label></div>
-<input type="text"  class="form-control" style="width:90%; margin-right: 10px" placeholder="Subject" ng-model="data.sub3" id="sub3" required>
-
-<div class="input-group-addon" style="background-color: transparent;"><label>Date:</label></div>
- <input type="Date" class="form-control" style="width:100%;" ng-model="data.date3" id="date3" required></div><br>
- 
- 
-  <center>
+ <center>
   <div class="{{classType}}" ng-model="output"><center>{{output}}</center></div>
 
-   <button type="submit" class="btn btn-lg" style=" margin-right: 60px; background-color:#2368a0;color:#fff">Submit</button> 
-   <input type="reset" class="btn btn-lg" style=" background-color:#2368a0;color:#fff" value="Reset">
+   <button type="submit" class="btn btn-lg" style="margin-left: 40px; background-color:#2368a0;color:#fff">Submit</button> 
+ 
    </div>
    </form>
     </center>
 </center>
+<div class="panel panel-primary" style="bottom: 0;position: absolute;width: 100%;margin-bottom: 0%;">
+<div class="panel-heading" style="padding-left:45%;">Powered by MSS</div>
+</div>
 </body>
 
 </html>

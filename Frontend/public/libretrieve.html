@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head><title>Exam Schedule</title>
+<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+  <script>
+  
+  
+    var app = angular.module('myApp',[]);
+  app.controller('myCtrl',function($scope,$rootScope,$http,$location,$window){
+  $scope.form = function(){
+  console.log($scope.data);
+	 var res = {
+            method : 'POST',
+            url : 'http://localhost:3000/getlibdata',
+            data : $scope.data,
+             headers: {
+                        'Content-Type': 'Application/json'
+                    }
+        }
+		$http(res).then(function(response){
+		var result = response.data.foundService;
+		if(result == 'err'){
+		$rootScope.output = "Error Occured!";
+		$scope.classType = "alert alert-danger";
+		}
+		else{
+		console.log(result);
+			$scope.inputDiv = true;
+			$scope.resultDiv = true;
+			$scope.retrievedBooks = result;
+			//$rootScope.retrievedBooks = result;
+			//console.log($rootScope.retrievedBooks);
+			//$window.location.href ='/libview.html'; 
+			//$scope.classType = "alert alert-success";
+			//$rootScope.output = "Retrieved";
+			//$scope.classType = "alert alert-success";
+			
+			}
+		});
+  }
+  })
+</script>
+	
+<style>
+	#img {
+    background: url("miracle.jpg") no-repeat center center fixed;
+    height: 100%; 
+    background-position: center;
+    background-repeat: no-repeat;
+	width:100%;
+	display: block;
+	position: fixed;
+    top:0;
+	}
+#img-bg{
+background:rgba(0,0,0,0.7);
+height:100%;
+width:100%;
+top:0;
+	display: block;
+	position: fixed;
+}
+#t1{
+	display: block;
+	position: fixed;
+	font-size: 40px;
+	color:#E6EAF1;
+	width:100%;
+	height:13%;
+}
+</style>
+	<link href="https://fonts.googleapis.com/css?family=Lora" rel="stylesheet">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+<body ng-app="myApp" ng-controller="myCtrl">
+<center>
+<div id="img"></div>
+<div id="img-bg"></div>
+
+<div id="t1" style="top:3%;"><b>Miracle Library Books</b></div>
+<div class="panel panel-default" style="margin-left:30%;margin-right:25%;position:absolute;margin-top:15%;width:500px;height:100px" ng-show="output">
+<div  style="font-size:20px;height:100%" class="{{classType}}" ng-model="output"><center>{{output}}</center></div>
+</div>
+<div ng-hide="inputDiv" class = "panel panel-default" style="margin-left:20%;margin-right:20%;top:20%;position:absolute">
+<form ng-submit="form()">
+<div style="margin-left:5%;margin-right:10%;margin-top:5%; margin-bottom:3%">
+<div class = "input-group">
+<div class="input-group-addon" style="background-color: transparent;"><label>Department</label></div>
+ <select  class="form-control" ng-model="data.Dept" id = "Dept">
+    <option>Select Department</option>
+    <option name = "cse">cse</option>
+    <option name = "ece">ece</option>
+    <option name = "eee">eee</option>
+    <option name = "mech">mech</option>
+    <option name = "civil">civil</option>
+    <option name = "bsh">bsh</option>
+    <option name = "mba">mba</option>
+    <option name = "mca">mca</option>
+    </select></div><br>
+
+<div class = "input-group">
+<div class="input-group-addon" style="background-color: transparent;"><label>Academic Year</label></div> 
+    <select class="form-control" ng-model="data.Year" id="Year">
+    <option name = "">Select Year</option>
+    <option name = "">First Year</option>
+	<option name = "">Second Year</option>
+	<option name = "">Third Year</option>
+	<option name = "">Fourth Year</option>
+    </select></div>
+<br>
+<div class = "input-group">
+<div class="input-group-addon" style="background-color: transparent;"><label>Semester</label></div> 
+    <select class="form-control" ng-model="data.Sem" id="Sem">
+    <option name = "">Select Semester</option>
+    <option name = "">First Semester</option>
+    <option name = "">Second Semester</option>
+</select></div>
+<br>
+
+<center>
+<div class="{{classType}}" ng-model="output"><center>{{output}}</center>
+</div>
+<button type="submit" class="btn btn-lg" style="margin-left: 40px; background-color:#2368a0;color:#fff">Submit</button> 
+</center>
+</div>
+</form>
+</div>
+
+<div ng-show="resultDiv" class = "panel panel-default" style="width:500px;height:auto;margin-left:32%;margin-right:20%;top:20%;position:absolute;">
+  <h2>Retrieved Library Books</h2>
+ 
+ <table class="table table-bordered" >
+    <thead>
+      <tr>
+        <th>Book Name</th>
+        <th>Book Author</th>
+        <th>ISBN</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat="x in retrievedBooks">
+        <td>{{x.data.bookName}}</td>
+        <td>{{x.data.bookAuthor}}</td>
+        <td>{{x.data.ISBN}}</td>
+      </tr>
+      </tbody>
+  </table>
+  
+</div>
+</center>
+<div class="panel panel-primary" style="bottom: 0;position: absolute;width: 100%;margin-bottom: 0%;">
+<div class="panel-heading" style="padding-left:45%;">Powered by MSS</div>
+</div>
+</body>
+
+</html>

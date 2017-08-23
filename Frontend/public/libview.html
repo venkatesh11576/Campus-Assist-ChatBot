@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Library View</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+</head>
+
+ <script>
+  
+  
+  var app = angular.module('myApp',[]);
+  app.controller('libViewCtrl',function($scope,$rootScope,$http,$location,$window){
+		$scope.books = $rootScope.retrievedBooks; 
+		console.log("in libview "+$rootScope.retrievedBooks);
+  })
+</script>
+<body ng-app = 'myApp'>
+
+<div class="container" ng-controller="libViewCtrl">
+  <h2>Miracle Library Books</h2>
+ <table class="table table-bordered" ng-repeat="x in books">
+    <thead>
+      <tr>
+        <th>Book Name</th>
+        <th>Book Author</th>
+        <th>ISBN</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>{{x.bookname}}</td>
+        <td>{{x.bookauthor}}</td>
+        <td>{{x.isbn}}</td>
+      </tr>
+      </tbody>
+  </table>
+</div>
+
+</body>
+</html>
