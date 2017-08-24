@@ -12,7 +12,7 @@
   console.log($scope.data);
 	 var res = {
             method : 'POST',
-            url : 'https://localhost:3000/insert',
+            url : 'http://localhost:3000/insert',
             data : $scope.data,
              headers: {
                         'Content-Type': 'Application/json'
@@ -142,8 +142,8 @@ top:0;
   <center>
   <div class="{{classType}}" ng-model="output"><center>{{output}}</center></div>
 
-   <button type="submit" class="btn btn-lg" style=" margin-right: 60px; background-color:#2368a0;color:#fff">Submit</button> 
-   <input type="reset" class="btn btn-lg" style=" background-color:#2368a0;color:#fff" value="Reset">
+   <button type="submit" class="btn btn-lg" style=" margin-right: -32px; background-color:#2368a0;color:#fff">Submit</button> 
+   <!-- <input type="reset" class="btn btn-lg" style=" background-color:#2368a0;color:#fff" value="Reset"> -->
    </div>
    </form>
     </center>

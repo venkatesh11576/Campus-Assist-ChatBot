@@ -49,10 +49,8 @@ var json1={};
 		var Msg = req.body.Body;
 		var client = twilio(twilioSid,twilioToken);
 			sendToWatson(contextw, Msg, function(response) {
-				
-				
-				
-				
+			
+				//forward Action
 				if(response.output.text[0].action ==="forward"){
 					
 	     client.messages.create({
@@ -67,7 +65,7 @@ var json1={};
 		res.json(response);
 	}
 	else{
-		console.log("response from twilio message service" + data);
+		console.log("Response from Twilio message service" + data);
 		console.log("\n SMS sent to :"+Num+" Body is : "+ response.output.text[0] );
 			response = {
 				"result":"msg"
@@ -77,7 +75,8 @@ var json1={};
 		});
 				}
 				
-else if(response.output.text[0] ==="transport"){   //Transport module
+else if(response.output.text[0] ==="transport"){
+	//Transport module
 
 	
 	var document = cloudant.db.use('context')
@@ -91,24 +90,30 @@ console.log("document inserted");
                   return console.log('[alice.insert] ', err.message);
             }
              });
+	
+	
 	var json1={};
 	if(response.entities[0].value=='yes'){
+		//This module is used After selecting the Bus it Asks for the Fare select yes or no.
+		
 	 json1.sample1=response.context.from;
-     console.log(json1);
-	 console.log(json1.sample1);
+	
+	console.log(json1);
+	console.log(json1.sample1);
+	
 	 var query1=
-	 {
-       "selector": {
-       "name": {
-       "$eq":json1.sample1
-               }
-                   },
-	  "fields": [
-      "_id",
-      "_rev","fees","name"
-                ]
-      }
-     var json={};
+	{
+  "selector": {
+    "name": {
+      "$eq":json1.sample1
+    }
+  },
+  "fields": [
+    "_id",
+    "_rev","fees","name"
+  ]
+}
+var json={};
 
 
 transport.find(query1,function(err,x){
@@ -119,19 +124,21 @@ transport.find(query1,function(err,x){
 		json.sample=x.docs[0].fees;
 		console.log(json);
 	}
-	    client.messages.create({
-		  to:Num,
-		  from:'+13237451396',
-		  body: json.sample
-			 }, function(err,data) {
-				 if (err){
-				 response = {
-				 "result":"err"
-				 }
+	
+
+	  client.messages.create({
+		to:Num,
+		from:'+13237451396',
+		body: json.sample
+			}, function(err,data) {
+				if (err){
+				response = {
+				"result":"err"
+				}
 		res.json(response);
 	}
 	else{
-		console.log("response from twilio message service" + data);
+		console.log("Response from Twilio message service" + data);
 		console.log("\n SMS sent to :"+Num+" Body is : "+ response.output.text[0] );
 			response = {
 				"result":"msg"
@@ -141,11 +148,9 @@ transport.find(query1,function(err,x){
 		}); });
 
 
-
-
 }else if(response.entities[0].value=='fare'){
+	//Directly we asks Bus Fare.
 	
-	//console.log("harshitga");
 	console.log(response.entities);
 	console.log(response);
 	console.log(response.entities[1].value);
@@ -155,8 +160,8 @@ transport.find(query1,function(err,x){
 	
 	  var query1=
 	{
-      "selector": {
-      "name": {
+  "selector": {
+    "name": {
       "$eq":json1.sample3
     }
   },
@@ -166,14 +171,18 @@ transport.find(query1,function(err,x){
   ]
 }
 var json={};
-   transport.find(query1,function(err,x){
-	  if(err)
-		  console.log(err);
-	  else{
-		 json.sample=x.docs[0].fees;
-		 console.log(json);
+
+
+transport.find(query1,function(err,x){
+	if(err)
+		console.log(err);
+	else{
+		
+		json.sample=x.docs[0].fees;
+		console.log(json);
 	}
-	client.messages.create({
+	
+	  client.messages.create({
 		to:Num,
 		from:'+13237451396',
 		body: json.sample
@@ -185,7 +194,7 @@ var json={};
 		res.json(response);
 	}
 	else{
-		console.log("response from twilio message service" + data);
+		console.log("Response from Twilio message service" + data);
 		console.log("\n SMS sent to :"+Num+" Body is : "+ response.output.text[0] );
 			response = {
 				"result":"msg"
@@ -193,24 +202,29 @@ var json={};
 				res.json(response); //sends JSON response to HTML
 			}
 		}); });
-	 }
-  else{
+	 
 	
-	   json1.sample2=response.entities[0].value;
-	   console.log(json1);
-       var query1=
-	    {
-          "selector": {
-          "name": {
-          "$eq":json1.sample2
-                  }
-                      },
-          "fields": [
-          "_id",
-          "_rev","Availability","name"
-                    ]
-        }
+}
+else{
+	//This module is used to know the available  buses from particular Location.
+	 json1.sample2=response.entities[0].value;
+	console.log(json1);
+	
+	 var query1=
+	{
+  "selector": {
+    "name": {
+      "$eq":json1.sample2
+    }
+  },
+  "fields": [
+    "_id",
+    "_rev","Availability","name"
+  ]
+}
 var json={};
+
+
 transport.find(query1,function(err,x){
 	if(err)
 		console.log(err);
@@ -219,7 +233,8 @@ transport.find(query1,function(err,x){
 		json.sample=x.docs[0].Availability;
 		console.log(json);
 	}
-	 client.messages.create({
+	
+  client.messages.create({
 		to:Num,
 		from:'+13237451396',
 		body: json.sample
@@ -231,7 +246,7 @@ transport.find(query1,function(err,x){
 		res.json(response);
 	}
 	else{
-		console.log("response from twilio message service" + data);
+		console.log("Response from Twilio message service" + data);
 		console.log("\n SMS sent to :"+Num+" Body is : "+ response.output.text[0] );
 			response = {
 				"result":"msg"
@@ -240,42 +255,52 @@ transport.find(query1,function(err,x){
 			}
 		}); });
 	
-      }		 //Transport module ends
-	}
-   else{
-   var document = cloudant.db.use('context1')
-                  data.context=response.context;
-                  var rev=data.rev_id;
-                  id=data._id;
-   console.log("document inserted");
-   document.insert(data, req.body.From, rev, id, function(err, body, header) {
-   if (err) {
-          return console.log('[alice.insert] ', err.message);
+}		 
+	
+
+}
+else{
+	//Libraray Module	
+	var document = cloudant.db.use('context1')
+                      data.context=response.context;
+                      var rev=data.rev_id;
+                      id=data._id;
+console.log("document inserted");
+
+				document.insert(data, req.body.From, rev, id, function(err, body, header) {
+           if (err) {
+                  return console.log('[alice.insert] ', err.message);
             }
-			});
-			if(response.entities[0].entity=="Department"){
+			
+             });
+			 
+			 if(response.entities[0].entity=="Department"){
+				 //After giving the book it asks for department.
 				 var json1={};
 				 console.log(response)
-				 console.log(response.entities[0].value);
-			     json1.sample1=response.entities[0].value;
+				 console.log(response.entities[0].value);	 
+	             json1.sample1=response.entities[0].value;
 	             console.log("anusha")
 	             console.log(response.context.AboutLibrary)
-    var query1=
-	 {
-         "selector": {
-                        "Department": {
-                        "$eq":json1.sample1
-                                      },
-	      "bookname": {
-		                "$eq":response.context.AboutLibrary
-	                  }
-                     },
-       "fields": [
-                   "_id",
-                   "_rev","Department","bookname","information"
-                 ]
-     }
+	 
+	 var query1=
+	{
+  "selector": {
+    "Department": {
+      "$eq":json1.sample1
+    },
+	"bookname":{
+		"$eq":response.context.AboutLibrary
+	}
+  },
+  "fields": [
+    "_id",
+    "_rev","Department","bookname","information"
+  ]
+}
 var json={};
+
+
 library.find(query1,function(err,x){
 	if(err)
 		console.log(err);
@@ -296,7 +321,7 @@ library.find(query1,function(err,x){
 		res.json(response);
 	}
 	else{
-		console.log("response from twilio message service" + data);
+		console.log("Response from Twilio message service" + data);
 		console.log("\n SMS sent to :"+Num+" Body is : "+ response.output.text[0] );
 			response = {
 				"result":"msg"
@@ -304,8 +329,10 @@ library.find(query1,function(err,x){
 				res.json(response); 
 			}
 		}); });
+
 }
 else if(response.entities[0].entity=="Department" && response.entities[1].entity=="AboutLibrary"){
+	//If we gave both the department and the Book 
 	var json1={};
 	 json1.sample3=response.entities[0].value;
 	 json1.sample4=response.entities[1].value;
@@ -327,7 +354,9 @@ else if(response.entities[0].entity=="Department" && response.entities[1].entity
   ]
 }
 var json={};
-  library.find(query1,function(err,x){
+
+
+library.find(query1,function(err,x){
 	if(err)
 		console.log(err);
 	else{
@@ -335,7 +364,9 @@ var json={};
 		json.sample=x.docs[0].information;
 		console.log(json);
 	}
-	client.messages.create({
+	
+
+	  client.messages.create({
 		to:Num,
 		from:'+13237451396',
 		body: json.sample
@@ -347,7 +378,7 @@ var json={};
 		res.json(response);
 	}
 	else{
-		console.log("response from twilio message service" + data);
+		console.log("Response from Twilio message service" + data);
 		console.log("\n SMS sent to :"+Num+" Body is : "+ response.output.text[0] );
 			response = {
 				"result":"msg"
@@ -356,36 +387,14 @@ var json={};
 			}
 		}); });
 
-     }
+}
 else if(response.entities[0].entity=="AboutLibrary"){
+	//move to the Library Intent asks  any available book in libraray
 	var json={};
 	json.sample=response.output.text[0];
-	client.messages.create({
-		to:Num,
-		from:'+13237451396',
-		body: json.sample
-			}, function(err,data) {
-				if (err){
-				response = {
-				"result":"err"
-				          }
-		res.json(response);
-	                  }
-     else{
-		console.log("response from twilio message service" + data);
-		console.log("\n SMS sent to :"+Num+" Body is : "+ response.output.text[0] );
-			response = {
-				"result":"msg"
-				}
-				res.json(response); 
-			}
-		}); 
-	}
- else {
-	console.log(response.output.text[0]);
-	var json={};
-	json.sample=response.output.text[0];
-    client.messages.create({
+	
+	
+	  client.messages.create({
 		to:Num,
 		from:'+13237451396',
 		body: json.sample
@@ -397,7 +406,7 @@ else if(response.entities[0].entity=="AboutLibrary"){
 		res.json(response);
 	}
 	else{
-		console.log("response from twilio message service" + data);
+		console.log("Response from Twilio message service" + data);
 		console.log("\n SMS sent to :"+Num+" Body is : "+ response.output.text[0] );
 			response = {
 				"result":"msg"
@@ -405,8 +414,40 @@ else if(response.entities[0].entity=="AboutLibrary"){
 				res.json(response); 
 			}
 		}); 
-      } 
-  }				
+		
+		
+		
+
+}
+ else {
+	 
+	 console.log(response.output.text[0]);
+	var json={};
+	json.sample=response.output.text[0];
+	
+	  client.messages.create({
+		to:Num,
+		from:'+13237451396',
+		body: json.sample
+			}, function(err,data) {
+				if (err){
+				response = {
+				"result":"err"
+				}
+		res.json(response);
+	}
+	else{
+		console.log("Response from Twilio message service" + data);
+		console.log("\n SMS sent to :"+Num+" Body is : "+ response.output.text[0] );
+			response = {
+				"result":"msg"
+				}
+				res.json(response); 
+			}
+		}); 
+} 
+	
+}				
 	});
   })
   // Sending User message to Watson to process it
@@ -418,7 +459,8 @@ else if(response.entities[0].entity=="AboutLibrary"){
 				"text": inp
 					}
 		};
-        var conversation = new ConversationV1({
+ 
+		var conversation = new ConversationV1({
 			username:'302deeb7-a5aa-4fe2-9841-5d80b87e56cf',
 			password: 'ihCvjboyI8qD',
 		version_date: '2017-06-01'
@@ -437,6 +479,8 @@ else if(response.entities[0].entity=="AboutLibrary"){
   *
   *Taking Student Branch to find in Database
   */
+  
+  //data1.context.TypeOfExam != null || data1.context.RegdNum != null
 	var node = data1.output.nodes_visited[0];
 		if(node == 'Exams' || node == 'RegNum' || node == 'ExamType'){
 			flag = 0;
@@ -483,7 +527,7 @@ else if(response.entities[0].entity=="AboutLibrary"){
                  var dataa = dataBase.data;
 			   var data = {
 				   output:{
-					   text:["Heyy, your "+ dataa.ExamType +"Examination Starts from "+dataa.startDate+" And Schedule is as follows :"+dataa.sub1+"-"+dataa.date1+","+dataa.sub2+"-"+dataa.date2+","+dataa.sub3+"-"+dataa.date3]
+					   text:["Hey, your "+ dataa.ExamType +"Examination will be Starts from "+dataa.startDate+" And Schedule is as follows :"+dataa.sub1+"-"+dataa.date1+","+dataa.sub2+"-"+dataa.date2+","+dataa.sub3+"-"+dataa.date3]
 				   }
 			   }	
                ExamType = null;
@@ -493,57 +537,14 @@ else if(response.entities[0].entity=="AboutLibrary"){
             }
         })
     }
-  }
+}
 if(flag == 0){
     console.log("Output : "+data1.output.text[0]);
     callback(data1);
 }
   })
 }
-/**
- * Accessing Conversation through SMS
- * Twilio will send HTTP post request to '/sms' containing the user information
- */
- 
-/* app.post('/sms',function(req,res){
-	console.log("/sms");
-	console.log(res.req.body);
-	var Num = res.req.body.From;
-   var Msg = res.req.body.Body;
-   console.log(Msg);
-   console.log(Num)
-	var client = twilio(twilioSid, twilioToken);
-	sendToWatson(contextw, Msg, function(response) {
-		if((response.output.text[0]).action ==="forward"){
-		//console.log("harshitha"+response);
-        console.log("Twilio got :" + response.output.text[0]);
-		console.log("ExamType"+ExamType+"\n RegdNum:"+RegdNum);
-		
-	 client.messages.create({
-     to:Num,
-     from:'+13237451396', 			// Twilio number
-     body: response.output.text[0]
-    }, function(err, data) {
-     if (err){
-		 console.log("Error Occured : "+ err);
-	}
-	else{
-     console.log("SMS sent to user is :"+response.output.text[0]);
-	 console.log("Twilio Response is:"+data);
-	 }
-		})
-		
-		}
-		else{
-			console.log("harshitha")
-			
-		}
-		
-		
-		
-		
-	})
-}) */
+
 /**
  * Starting Server in localhost
  */
