@@ -39,9 +39,9 @@ var contextw={}; // Context variable
  app.get('/',function(req,res){
  res.sendFile(__dirname+'/index.html');
 });
-var json1={};
 // '/message' API call for all Watson Conversation and Twilio SMS Through HTML
-  app.post('/message', function(req, res) {  
+var json1={};
+ app.post('/message', function(req, res) {  
 		var data = req.body;
 		console.log(data);
 		
@@ -49,20 +49,18 @@ var json1={};
 		var Msg = req.body.Body;
 		var client = twilio(twilioSid,twilioToken);
 			sendToWatson(contextw, Msg, function(response) {
-			
 				//forward Action
-				if(response.output.text[0].action ==="forward"){
-					
-	     client.messages.create({
-		to:Num,
-		from:'+13237451396',
-		body: response.output.text[0]
-			}, function(err,data) {
-				if (err){
-				response = {
-				"result":"err"
-				}
-		res.json(response);
+		    if(response.output.text[0].action ==="forward"){
+					client.messages.create({
+		            to:Num,
+		            from:'+13237451396',
+		            body: response.output.text[0]
+			              }, function(err,data) {
+				        if (err){
+				        response = {
+				        "result":"err"
+				                   }
+		   res.json(response);
 	}
 	else{
 		console.log("Response from Twilio message service" + data);
@@ -74,11 +72,8 @@ var json1={};
 			}
 		});
 				}
-				
+//Transport module starts		
 else if(response.output.text[0] ==="transport"){
-	//Transport module
-
-	
 	var document = cloudant.db.use('context')
                       data.context=response.context;
                       var rev=data.rev_id;
@@ -91,31 +86,26 @@ console.log("document inserted");
             }
              });
 	
-	
+	//This module is used After selecting the Bus it Asks for the Fare select yes or no	
 	var json1={};
 	if(response.entities[0].value=='yes'){
-		//This module is used After selecting the Bus it Asks for the Fare select yes or no.
-		
 	 json1.sample1=response.context.from;
-	
-	console.log(json1);
-	console.log(json1.sample1);
-	
+	 console.log(json1);
+	 console.log(json1.sample1);
 	 var query1=
 	{
-  "selector": {
-    "name": {
+      "selector": {
+      "name": {
       "$eq":json1.sample1
-    }
-  },
+              }
+   },
   "fields": [
     "_id",
     "_rev","fees","name"
   ]
 }
+//This module used for find the fees iformation
 var json={};
-
-
 transport.find(query1,function(err,x){
 	if(err)
 		console.log(err);
@@ -124,8 +114,6 @@ transport.find(query1,function(err,x){
 		json.sample=x.docs[0].fees;
 		console.log(json);
 	}
-	
-
 	  client.messages.create({
 		to:Num,
 		from:'+13237451396',
@@ -148,9 +136,9 @@ transport.find(query1,function(err,x){
 		}); });
 
 
-}else if(response.entities[0].value=='fare'){
-	//Directly we asks Bus Fare.
-	
+}
+//This module is used for directly we asks Bus Fare
+else if(response.entities[0].value=='fare'){
 	console.log(response.entities);
 	console.log(response);
 	console.log(response.entities[1].value);
@@ -170,9 +158,8 @@ transport.find(query1,function(err,x){
     "_rev","fees"
   ]
 }
+//This module is used for get fare from database
 var json={};
-
-
 transport.find(query1,function(err,x){
 	if(err)
 		console.log(err);
@@ -205,8 +192,8 @@ transport.find(query1,function(err,x){
 	 
 	
 }
+//This module is used to know the available  buses from particular Location.
 else{
-	//This module is used to know the available  buses from particular Location.
 	 json1.sample2=response.entities[0].value;
 	console.log(json1);
 	
@@ -222,9 +209,8 @@ else{
     "_rev","Availability","name"
   ]
 }
+//This module is used for get the availability of information from database
 var json={};
-
-
 transport.find(query1,function(err,x){
 	if(err)
 		console.log(err);
@@ -233,7 +219,6 @@ transport.find(query1,function(err,x){
 		json.sample=x.docs[0].Availability;
 		console.log(json);
 	}
-	
   client.messages.create({
 		to:Num,
 		from:'+13237451396',
@@ -256,11 +241,9 @@ transport.find(query1,function(err,x){
 		}); });
 	
 }		 
-	
-
 }
+//Libraray Module	
 else{
-	//Libraray Module	
 	var document = cloudant.db.use('context1')
                       data.context=response.context;
                       var rev=data.rev_id;
@@ -298,9 +281,8 @@ console.log("document inserted");
     "_rev","Department","bookname","information"
   ]
 }
+//This module is used for get the book information from database
 var json={};
-
-
 library.find(query1,function(err,x){
 	if(err)
 		console.log(err);
@@ -336,8 +318,7 @@ else if(response.entities[0].entity=="Department" && response.entities[1].entity
 	var json1={};
 	 json1.sample3=response.entities[0].value;
 	 json1.sample4=response.entities[1].value;
-	 console.log(json1);
-	 
+	 console.log(json1); 
 	 var query1=
 	{
   "selector": {
@@ -353,9 +334,8 @@ else if(response.entities[0].entity=="Department" && response.entities[1].entity
     "_rev","Department","bookname","information"
   ]
 }
+//This module is used for get the books information from database
 var json={};
-
-
 library.find(query1,function(err,x){
 	if(err)
 		console.log(err);
@@ -364,8 +344,6 @@ library.find(query1,function(err,x){
 		json.sample=x.docs[0].information;
 		console.log(json);
 	}
-	
-
 	  client.messages.create({
 		to:Num,
 		from:'+13237451396',
@@ -389,12 +367,10 @@ library.find(query1,function(err,x){
 
 }
 else if(response.entities[0].entity=="AboutLibrary"){
-	//move to the Library Intent asks  any available book in libraray
+	//Move to the Library Intent asks  any available book in libraray
 	var json={};
 	json.sample=response.output.text[0];
-	
-	
-	  client.messages.create({
+	client.messages.create({
 		to:Num,
 		from:'+13237451396',
 		body: json.sample
@@ -414,10 +390,6 @@ else if(response.entities[0].entity=="AboutLibrary"){
 				res.json(response); 
 			}
 		}); 
-		
-		
-		
-
 }
  else {
 	 
